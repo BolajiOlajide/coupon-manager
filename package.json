@@ -1,0 +1,17 @@
+{
+  "name": "coupon-manager",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:BolajiOlajide/coupon-manager.git",
+  "author": "Bolaji Olajide <cooproton@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "graphql-yoga": "^1.18.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "scripts": {
+    "dev": "nodemon ."
+  }
+}

@@ -13,12 +13,12 @@ module.exports = `
   type Coupon {
     id: ID!
     code: String!
-    expiry: Int!
+    expiry: Float!
     owner: AuthenticatedUser!
   }
 
   type Query {
-    fetchUserCoupon(userId: ID!): [Coupon]!
+    fetchUserCoupon(userId: ID): [Coupon]!
     fetchNonSecureUsers: [User]!
   }
 

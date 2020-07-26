@@ -10,3 +10,5 @@
 * Fetch User Coupon -> Query
 * Add Coupon for User -> Mutation
 * Get All Users Credentials -> Query
+* Modify Coupon for User -> Mutation
+* Delete Coupon for User -> Mutation

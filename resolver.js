@@ -18,7 +18,7 @@ module.exports = {
         }
       })
     },
-    fetchNonSecureUsers: () => { }
+    fetchNonSecureUsers: () => data.users
   },
   Mutation: {
     signin(_, args) {
@@ -41,6 +41,24 @@ module.exports = {
       data.users.push(newUser);
 
       return newUser;
+    },
+    addCoupon(_, args) {
+      const { userId, couponCode: code, expiry } = args;
+
+      const user = data.users.find(user => user.id == userId);
+
+      if (!user) throw new Error('User not found')
+
+      const existingCoupon = data.coupons.find(coupon => coupon.code === code && coupon.userId == userId);
+
+      if (existingCoupon) throw new Error('Coupon already exists for this user');
+
+      const newCouponId = data.coupons[data.coupons.length - 1].id + 1;
+      const newCoupon = { id: newCouponId, code, expiry, userId: Number(userId) }
+
+      data.coupons.push(newCoupon);
+
+      return { ...newCoupon, owner: user };
     }
   }
 }

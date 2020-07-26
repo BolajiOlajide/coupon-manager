@@ -25,6 +25,6 @@ module.exports = `
   type Mutation {
     signin(name: String!, password: String!): AuthenticatedUser!
     signup(name: String!, password: String!): AuthenticatedUser!
-    addCoupon(userId: ID!, couponCode: String!, expiry: String): Coupon!
+    addCoupon(userId: ID!, couponCode: String!, expiry: Float!): Coupon!
   }
 `;

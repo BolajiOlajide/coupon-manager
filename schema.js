@@ -19,6 +19,7 @@ module.exports = `
 
   type Query {
     fetchUserCoupon(userId: ID): [Coupon]!
+    fetchCoupon(id: ID!): Coupon!
     fetchNonSecureUsers: [User]!
   }
 
@@ -26,5 +27,7 @@ module.exports = `
     signin(name: String!, password: String!): AuthenticatedUser!
     signup(name: String!, password: String!): AuthenticatedUser!
     addCoupon(userId: ID!, couponCode: String!, expiry: Float!): Coupon!
+    editCoupon(id: ID!, userId: ID!, couponCode: String!, expiry: Float!): Coupon!
+    deleteCoupon(id: ID!, userId: ID!): Coupon!
   }
 `;

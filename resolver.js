@@ -1,64 +1,66 @@
-const data = require('./data');
+// @ts-check
+
+const { getAllCoupons, getUserCoupons, addCoupon, getCoupon, editCoupon, deleteCoupon } = require('./services/coupon');
+const { getAllUsers, getUserByNameAndPassword, addUser, getUser } = require('./services/user');
 
 module.exports = {
   Query: {
-    fetchUserCoupon: (_, args) => {
+    fetchUserCoupon(_, args) {
       const { userId } = args;
       const couponsToReturn = [];
+
       if (!userId) {
-        couponsToReturn.push(...data.coupons);
+        couponsToReturn.push(...getAllCoupons());
       } else {
-        couponsToReturn.push(...data.coupons.filter(coupon => coupon.userId == userId));
+        couponsToReturn.push(...getUserCoupons(userId));
       }
 
-      return couponsToReturn
+      return couponsToReturn;
     },
-    fetchNonSecureUsers: () => data.users
+    fetchCoupon(_, args) {
+      const { id } = args;
+
+      const coupon = getCoupon(id);
+
+      if (coupon) return coupon;
+      throw new Error('Coupon not found');
+    },
+    fetchNonSecureUsers: () => getAllUsers(),
   },
   Mutation: {
     signin(_, args) {
       const { name, password } = args;
-      const currentUser = data.users.find(user => user.name === name && user.password === password);
+      const user = getUserByNameAndPassword(name, password);
 
-      if (currentUser) return currentUser;
+      if (user) return user;
       throw new Error('User not found.')
     },
     signup(_, args) {
       const { name, password } = args;
+      const user = addUser(name, password);
 
-      const existingUser = data.users.find(user => user.name === name);
-
-      if (existingUser) throw new Error('User already exists');
-
-      const newUserId = data.users[data.users.length - 1].id + 1;
-      const newUser = { id: newUserId, name, password };
-
-      data.users.push(newUser);
-
-      return newUser;
+      return user;
     },
     addCoupon(_, args) {
-      const { userId, couponCode: code, expiry } = args;
+      const { userId, couponCode, expiry } = args;
+      const coupon = addCoupon(couponCode, expiry, userId);
 
-      const user = data.users.find(user => user.id == userId);
+      return coupon;
+    },
+    editCoupon(_, args) {
+      const { id, userId, couponCode, expiry } = args;
+      const coupon = editCoupon(id, couponCode, expiry, userId);
 
-      if (!user) throw new Error('User not found')
+      return coupon;
+    },
+    deleteCoupon(_, args) {
+      const { id, userId } = args;
+      const coupon = deleteCoupon(id, userId);
 
-      const existingCoupon = data.coupons.find(coupon => coupon.code === code && coupon.userId == userId);
-
-      if (existingCoupon) throw new Error('Coupon already exists for this user');
-
-      const newCouponId = data.coupons[data.coupons.length - 1].id + 1;
-      const newCoupon = { id: newCouponId, code, expiry, userId: Number(userId) }
-
-      data.coupons.push(newCoupon);
-
-      return { ...newCoupon, owner: user };
+      return coupon;
     }
   },
   Coupon: {
-    owner: (parent) => {
-      return data.users.find(user => user.id == parent.userId)
-    }
+    owner: (parent) => getUser(parent.userId)
   }
 }

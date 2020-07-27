@@ -26,5 +26,6 @@ module.exports = `
     signin(name: String!, password: String!): AuthenticatedUser!
     signup(name: String!, password: String!): AuthenticatedUser!
     addCoupon(userId: ID!, couponCode: String!, expiry: Float!): Coupon!
+    editCoupon(id: ID!, userId: ID!, couponCode: String!, expiry: Float!): Coupon!
   }
 `;

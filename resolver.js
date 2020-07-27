@@ -11,12 +11,7 @@ module.exports = {
         couponsToReturn.push(...data.coupons.filter(coupon => coupon.userId == userId));
       }
 
-      return couponsToReturn.map(coupon => {
-        return {
-          ...coupon,
-          owner: data.users.find(user => user.id == coupon.userId)
-        }
-      })
+      return couponsToReturn
     },
     fetchNonSecureUsers: () => data.users
   },
@@ -59,6 +54,11 @@ module.exports = {
       data.coupons.push(newCoupon);
 
       return { ...newCoupon, owner: user };
+    }
+  },
+  Coupon: {
+    owner: (parent) => {
+      return data.users.find(user => user.id == parent.userId)
     }
   }
 }

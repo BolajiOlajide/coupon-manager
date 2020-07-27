@@ -1,11 +1,11 @@
 // @ts-check
 
-const { getAllCoupons, getUserCoupons, getCouponByUserAndCode, addCoupon } = require('./services/coupon');
-const { getAllUsers, getUserByName, getUserByNameAndPassword, addUser, getUser } = require('./services/user');
+const { getAllCoupons, getUserCoupons, addCoupon, getCoupon, editCoupon, deleteCoupon } = require('./services/coupon');
+const { getAllUsers, getUserByNameAndPassword, addUser, getUser } = require('./services/user');
 
 module.exports = {
   Query: {
-    fetchUserCoupon: (_, args) => {
+    fetchUserCoupon(_, args) {
       const { userId } = args;
       const couponsToReturn = [];
 
@@ -17,37 +17,45 @@ module.exports = {
 
       return couponsToReturn;
     },
-    fetchNonSecureUsers: () => getAllUsers()
+    fetchCoupon(_, args) {
+      const { id } = args;
+
+      const coupon = getCoupon(id);
+
+      if (coupon) return coupon;
+      throw new Error('Coupon not found');
+    },
+    fetchNonSecureUsers: () => getAllUsers(),
   },
   Mutation: {
     signin(_, args) {
       const { name, password } = args;
-      const currentUser = getUserByNameAndPassword(name, password);
+      const user = getUserByNameAndPassword(name, password);
 
-      if (currentUser) return currentUser;
+      if (user) return user;
       throw new Error('User not found.')
     },
     signup(_, args) {
       const { name, password } = args;
-      const existingUser = getUserByName(name);
-
-      if (existingUser) throw new Error('User already exists');
-
       const user = addUser(name, password);
 
       return user;
     },
     addCoupon(_, args) {
-      const { userId, couponCode: code, expiry } = args;
-      const user = getUser(userId);
+      const { userId, couponCode, expiry } = args;
+      const coupon = addCoupon(couponCode, expiry, userId);
 
-      if (!user) throw new Error('User not found')
+      return coupon;
+    },
+    editCoupon(_, args) {
+      const { id, userId, couponCode, expiry } = args;
+      const coupon = editCoupon(id, couponCode, expiry, userId);
 
-      const existingCoupon = getCouponByUserAndCode(userId, code);
-
-      if (existingCoupon) throw new Error('Coupon already exists for this user');
-
-      const coupon = addCoupon(code, expiry, userId);
+      return coupon;
+    },
+    deleteCoupon(_, args) {
+      const { id, userId } = args;
+      const coupon = deleteCoupon(id, userId);
 
       return coupon;
     }

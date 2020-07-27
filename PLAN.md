@@ -7,11 +7,12 @@
 
 - [x] Signin -> Mutation
 - [x] Signup -> Mutation
+- [x] Fetch Coupon -> Query
 - [x] Fetch User Coupon -> Query
 - [x] Add Coupon for User -> Mutation
 - [x] Get All Users Credentials -> Query
-- [ ] Modify Coupon for User -> Mutation
-- [ ] Delete Coupon for User -> Mutation
+- [x] Modify Coupon for User -> Mutation
+- [x] Delete Coupon for User -> Mutation
 
 ## Add Database
 

@@ -5,62 +5,41 @@ const { getAllUsers, getUserByNameAndPassword, addUser, getUser } = require('./s
 
 module.exports = {
   Query: {
-    fetchUserCoupon(_, args) {
-      const { userId } = args;
-      const couponsToReturn = [];
+    async fetchCoupons(_, { userId }) {
+      let coupons = [];
 
       if (!userId) {
-        couponsToReturn.push(...getAllCoupons());
+        coupons = await getAllCoupons();
       } else {
-        couponsToReturn.push(...getUserCoupons(userId));
+        coupons = await getUserCoupons(userId);
       }
 
-      return couponsToReturn;
+      return coupons;
     },
-    fetchCoupon(_, args) {
-      const { id } = args;
-
-      const coupon = getCoupon(id);
+    async fetchCoupon(_, { id }) {
+      const coupon = await getCoupon(id);
 
       if (coupon) return coupon;
       throw new Error('Coupon not found');
     },
-    fetchNonSecureUsers: () => getAllUsers(),
+    fetchNonSecureUsers: async () => await getAllUsers(),
   },
   Mutation: {
-    signin(_, args) {
-      const { name, password } = args;
-      const user = getUserByNameAndPassword(name, password);
+    async signin(_, { name, password }) {
+      const user = await getUserByNameAndPassword(name, password);
 
       if (user) return user;
       throw new Error('User not found.')
     },
-    signup(_, args) {
-      const { name, password } = args;
-      const user = addUser(name, password);
-
-      return user;
+    async deleteCoupon(_, { id, userId }) {
+      await deleteCoupon(id, userId);
+      return true;
     },
-    addCoupon(_, args) {
-      const { userId, couponCode, expiry } = args;
-      const coupon = addCoupon(couponCode, expiry, userId);
-
-      return coupon;
-    },
-    editCoupon(_, args) {
-      const { id, userId, couponCode, expiry } = args;
-      const coupon = editCoupon(id, couponCode, expiry, userId);
-
-      return coupon;
-    },
-    deleteCoupon(_, args) {
-      const { id, userId } = args;
-      const coupon = deleteCoupon(id, userId);
-
-      return coupon;
-    }
+    signup: async (_, { name, password }) => await addUser(name, password),
+    addCoupon: async (_, { userId, couponCode, expiry }) => await addCoupon(couponCode, expiry, userId),
+    editCoupon: async (_, { id, userId, couponCode, expiry }) => await editCoupon(id, couponCode, expiry, userId)
   },
   Coupon: {
-    owner: (parent) => getUser(parent.userId)
+    owner: (parent) => getUser(parent.ownerId)
   }
 }

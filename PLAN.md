@@ -16,7 +16,7 @@
 
 ## Add Database
 
-- [ ] Figure out which database to make use of, and set it up.
+- [x] Figure out which database to make use of, and set it up.
 
 ## Set up Authentication
 

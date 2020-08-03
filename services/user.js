@@ -1,21 +1,54 @@
 // @ts-check
 
-const { users } = require("../data");
+const { all, get, run } = require("../db");
+const { SELECT_USERS, SELECT_USER_BY_NAME, SELECT_USER_BY_ID, INSERT_USER } = require("../sql/user");
+const { handleError, hashPassword, comparePassword } = require("../utils");
+const entity = 'User';
 
-const getAllUsers = () => users;
-const getUserByName = (name) => users.find(user => user.name === name);
-const getUserByNameAndPassword = (name, password) => users.find(user => user.name === name && user.password === password);
-const getUser = (id) => users.find(user => user.id == id);
+async function getAllUsers() {
+    try {
+        return await all(SELECT_USERS);
+    } catch(error) {
+        handleError(error, entity);
+    }
+}
 
-function addUser(name, password) {
-    const existingUser = getUserByName(name);
-    if (existingUser) throw new Error('User already exists');
+async function getUserByName(name) {
+    try {
+        return await get(SELECT_USER_BY_NAME, [name]);
+    } catch(error) {
+        handleError(error, entity);
+    }
+}
 
-    const id = users[users.length - 1].id + 1;
-    const user = { id, name, password };
+async function getUserByNameAndPassword(name, password) {
+    try {
+        const user = await getUserByName(name);
+        
+        if (!user) return null;
+        if (!comparePassword(password, user.password)) return null;
 
-    users.push(user);
-    return user;
+        return user;
+    } catch(error) {
+        handleError(error, entity);
+    }
+}
+
+async function getUser(id) {
+    try {
+        return await get(SELECT_USER_BY_ID, [id]);
+    } catch(error) {
+        handleError(error, entity);
+    }
+}
+
+async function addUser(name, password) {
+    try {
+        await run(INSERT_USER, [name, hashPassword(password)]);
+        return await getUserByName(name);
+    } catch (error) {
+        handleError(error, entity);
+    }
 }
 
 module.exports = {

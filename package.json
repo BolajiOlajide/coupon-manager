@@ -6,7 +6,10 @@
   "author": "Bolaji Olajide <cooproton@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "graphql-yoga": "^1.18.3"
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
+    "graphql-yoga": "^1.18.3",
+    "sqlite3": "^5.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

@@ -21,7 +21,7 @@ Pending...
   This file will be used by `sqlite` as the disk file database.
 - Start the server
   ```
-  yarn run dev
+  yarn dev
   ```
   OR
   ```

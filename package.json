@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:BolajiOlajide/coupon-manager.git",
-  "author": "Bolaji Olajide <cooproton@gmail.com>",
+  "author": "Bolaji Olajide",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "dataloader": "^2.0.0",
     "dotenv": "^8.2.0",
     "graphql-yoga": "^1.18.3",
     "sqlite3": "^5.0.0"

@@ -25,7 +25,8 @@ module.exports = {
     fetchNonSecureUsers: async () => await getAllUsers(),
   },
   Mutation: {
-    async signin(_, { name, password }) {
+    async signin(_, { name, password }, ctx) {
+      console.log(ctx)
       const user = await getUserByNameAndPassword(name, password);
 
       if (user) return user;
@@ -40,6 +41,9 @@ module.exports = {
     editCoupon: async (_, { id, userId, couponCode, expiry }) => await editCoupon(id, couponCode, expiry, userId)
   },
   Coupon: {
-    owner: (parent) => getUser(parent.ownerId)
+    owner: (parent, _, ctx) => {
+      console.log(parent.ownerId, '<--- serching for this person');
+      return ctx.userLoader.load(parent.ownerId)
+    }
   }
 }
